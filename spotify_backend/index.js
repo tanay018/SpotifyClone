@@ -5,12 +5,13 @@ const JwtStrategy = require("passport-jwt").Strategy,
 const passport = require("passport");
 const User = require("./models/User");
 const authRoutes = require("./routes/auth");
+const bodyParser = require('body-parser');
 const songRoutes = require("./routes/song");
-const playlistRoutes = require("./routes/playlist");
+// const playlistRoutes = require("./routes/playlist");
 require("dotenv").config();
-const cors = require("cors");
+// const cors = require("cors");
 const app = express();
-const port = 8080;
+const port = 8082;
 // console.log(process.env.MONGO_URI);
 // API : GET type : / : return text "Hello world"
 mongoose
@@ -29,8 +30,10 @@ mongoose
   
 // setup passport-jwt
 let opts = {};
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey =  process.env.secretorkey;
+opts.secretOrKey =  process.env.Secretorkey;
 passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
         User.findOne({id: jwt_payload.sub}, function (err, user) {
@@ -53,9 +56,9 @@ app.get("/", (req, res) => {
   // res contains all data for the response
   res.send("Hello World");
 });
-// app.use("/auth", authRoutes);
-// app.use("/song", songRoutes);
-// app.use("/playlist", playlistRoutes);mongodb+srv://tanaybhuta:<password>@cluster0.uui9fqt.mongodb.net/?retryWrites=true&w=majority
+app.use("/auth", authRoutes);
+app.use("/song", songRoutes);
+// app.use("/playlist", playlistRoutes)//;mongodb+srv://tanaybhuta:<password>@cluster0.uui9fqt.mongodb.net/?retryWrites=true&w=majority
 
 // Now we want to tell express that our server will run on localhost:8000
 app.listen(port, () => {

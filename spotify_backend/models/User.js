@@ -1,4 +1,4 @@
-onst mongoose = require("mongoose");
+const mongoose = require("mongoose");
 // How to create a model
 // Step 1 :require mongoose
 // Step 2 :Create a mongoose schema (structure of a user)
